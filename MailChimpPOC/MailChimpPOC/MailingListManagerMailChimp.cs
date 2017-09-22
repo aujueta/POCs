@@ -36,7 +36,7 @@ namespace MailChimpPOC
             return result;
         }
 
-        public async Task AddUserToList(string email, string name, string lastname, string listId)
+        public async Task<HttpResponseMessage> AddUserToList(string email, string name, string lastname, string listId)
         {
             var sampleListMember = _jsonConverter.SerializeObject(
                 new
@@ -54,7 +54,7 @@ namespace MailChimpPOC
             var hashedEmail = string.IsNullOrEmpty(email) ? "" : CalculateMD5Hash(email.ToLower());
             var uri = string.Format("https://us16.api.mailchimp.com/3.0/lists/{0}/members/{1}", listId, hashedEmail);
 
-            HttpResponseMessage response = await _httpClient.PostAsync(uri, new JsonEncodedContent(sampleListMember));
+            return await _httpClient.PostAsync(uri, new JsonEncodedContent(sampleListMember));
         }
 
         private static string CalculateMD5Hash(string input)
